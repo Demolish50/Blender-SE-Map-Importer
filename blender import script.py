@@ -84,22 +84,28 @@ def createz():
 #        counter = counter + 1
 #    domData.unlink()
 
-## FML why can't if figure this out - Currently a mess and probably not right at all missing a lot from my testing, probably should trash it.
+## FML why can't if figure this out - Currently a mess and probably not right at all
 def readworld():
-    namespace = {'xsi': 'http://www.w3.org/2001/XMLScheme-instance'} 
     from xml.etree import cElementTree as ElementTree
+    
+    ElementTree.register_namespace('xsi', 'http://www.w3.org/2001/XMLScheme-instance')
+    namespace = {'xsi': 'http://www.w3.org/2001/XMLScheme-instance'} 
     
     xmlPath = 'e:\\test.xml'
     xmlRoot = ElementTree.parse(xmlPath).getroot()
-    r = 0
-    for element in xmlRoot[3]:
-            for element in xmlRoot[3][0]:
-                objectName = element.tag
-                #print(objectName)
-                if 'Filename' in objectName:
-                    roidname = xmlRoot[3][2].find('Filename').text
-                    print(roidname)
-                    r = r + 1
+    
+    #why this no return anything
+    results = xmlRoot.findall(".//SectorObjects/MyObjectBuilder_EntityBase/..[@xsi:type='MyObjectBuilder_VoxelMap']", namespaces=namespace)
+    print(results)
+    #r = 0
+    #for element in xmlRoot[3]:
+    #        for element in xmlRoot[3][0]:
+    #            objectName = element.tag
+    #            #print(objectName)
+    #            if 'Filename' in objectName:
+    #                roidname = xmlRoot[3][2].find('Filename').text
+    #                print(roidname)
+    #                r = r + 1
 
 #Create Large Asteroids
 def createAsteroid(x,y,z,roidname):
