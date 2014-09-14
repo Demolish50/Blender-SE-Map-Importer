@@ -9,6 +9,14 @@ bpy.data.worlds["World"].zenith_color[0] = 0
 bpy.data.worlds["World"].zenith_color[1] = 0
 bpy.data.worlds["World"].zenith_color[2] = 0
 
+#Clear Default Scene Objects - Probably a better way to do this.
+for ob in bpy.context.scene.objects:
+    ob.select = ob.type == 'CAMERA' and ob.name.startswith("Camera")
+    bpy.ops.object.delete()
+    ob.select = ob.type == 'MESH' and ob.name.startswith("Cube")
+    bpy.ops.object.delete()
+    ob.select = ob.type == 'LAMP' and ob.name.startswith("Lamp")
+    bpy.ops.object.delete()
 
 #make material functions
 def makeMaterial(name, diffuse, specular, alpha):
@@ -68,7 +76,7 @@ def createz():
     bpy.context.object.data.extrude = 5
     bpy.context.object.rotation_euler[1] = 1.5708
 
-## Read the world and create the roids
+#Read World File
 def readworld():
     from xml.etree import cElementTree as ElementTree
     
@@ -91,8 +99,8 @@ def readworld():
                 posy = float(posy)
                 posz = pos.get('z')
                 posz = float(posx)
-                #Do the damn thing AKA Asteroid Creation
-                createAsteroid(posx,posy,posz,roidname)
+                #Do the damn thing
+                #createAsteroid(posx,posy,posz,roidname)
                 print(posz)
                   
             print(roidname)
@@ -101,7 +109,7 @@ def readworld():
         print('no')        
             
    
-#Create Asteroids
+#Create Large Asteroids
 def createAsteroid(x,y,z,roidname):
        bpy.ops.mesh.primitive_ico_sphere_add(location=(x, y, z))
        bpy.data.objects["Icosphere"].name = roidname
@@ -117,8 +125,8 @@ def createAsteroid(x,y,z,roidname):
 
 #Program
 #createAsteroid(1000,1000,1000,'asteroid2')
-creategrid()
-createx()
-createy()
-createz()
-readworld()
+#creategrid()
+#createx()
+#createy()
+#createz()
+#readworld()
