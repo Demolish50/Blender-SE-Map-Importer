@@ -98,10 +98,10 @@ def readworld():
                 posy = pos.get('y')
                 posy = float(posy)
                 posz = pos.get('z')
-                posz = float(posx)
+                posz = float(posz)
                 #Do the damn thing
-                #createAsteroid(posx,posy,posz,roidname)
-                print(posz)
+                createAsteroid(posx,posy,posz,roidname)
+                #print(posz)
                   
             print(roidname)
                        
@@ -125,8 +125,8 @@ def createAsteroid(x,y,z,roidname):
 
 #Program
 #createAsteroid(1000,1000,1000,'asteroid2')
-#creategrid()
-#createx()
-#createy()
-#createz()
-#readworld()
+creategrid()
+createx()
+createy()
+createz()
+readworld()
