@@ -68,23 +68,7 @@ def createz():
     bpy.context.object.data.extrude = 5
     bpy.context.object.rotation_euler[1] = 1.5708
 
-#Read World File
-#def readworld():
- #   from xml.dom.minidom import parse
-#    from xml.dom.minidom import Node
-    
-#    domData = parse("e:\\test.xml")
-#    asteroids = domData.getElementsByTagName("MyObjectBuilder_EntityBase")
-#    entities = domData.getElementsByTagName('Filename')
-#    counter = 0
-#    for entity in entities:
-#        #fileNameid = asteroids.getAttribute("Filename")
-##        fileNameId = domData.getElementsByTagName('Filename')[counter].firstChild.nodeValue
-#        print("Filename \r" + fileNameId)
-#        counter = counter + 1
-#    domData.unlink()
-
-## FML why can't if figure this out - Currently a mess and probably not right at all
+## Read the world and create the roids
 def readworld():
     from xml.etree import cElementTree as ElementTree
     
@@ -94,20 +78,30 @@ def readworld():
     xmlPath = 'e:\\test.xml'
     xmlRoot = ElementTree.parse(xmlPath).getroot()
     
-    #why this no return anything
-    results = xmlRoot.findall(".//SectorObjects/MyObjectBuilder_EntityBase/..[@xsi:type='MyObjectBuilder_VoxelMap']", namespaces=namespace)
-    print(results)
-    #r = 0
-    #for element in xmlRoot[3]:
-    #        for element in xmlRoot[3][0]:
-    #            objectName = element.tag
-    #            #print(objectName)
-    #            if 'Filename' in objectName:
-    #                roidname = xmlRoot[3][2].find('Filename').text
-    #                print(roidname)
-    #                r = r + 1
-
-#Create Large Asteroids
+    results = xmlRoot.findall(".//SectorObjects/MyObjectBuilder_EntityBase[Filename]")
+    try:
+        for result in results:
+            roidname = result.find('Filename').text
+            
+            for pos in result.iter('Position'):
+                pos = pos.attrib
+                posx = pos.get('x')
+                posx = float(posx)
+                posy = pos.get('y')
+                posy = float(posy)
+                posz = pos.get('z')
+                posz = float(posx)
+                #Do the damn thing AKA Asteroid Creation
+                createAsteroid(posx,posy,posz,roidname)
+                print(posz)
+                  
+            print(roidname)
+                       
+    except AttributeError as aE:
+        print('no')        
+            
+   
+#Create Asteroids
 def createAsteroid(x,y,z,roidname):
        bpy.ops.mesh.primitive_ico_sphere_add(location=(x, y, z))
        bpy.data.objects["Icosphere"].name = roidname
@@ -123,8 +117,8 @@ def createAsteroid(x,y,z,roidname):
 
 #Program
 #createAsteroid(1000,1000,1000,'asteroid2')
-#creategrid()
-#createx()
-#createy()
-#createz()
+creategrid()
+createx()
+createy()
+createz()
 readworld()
