@@ -4,7 +4,7 @@ import bmesh
 #Setup our Scene #need to figure out how to set max clip at 200km
 bpy.data.scenes['Scene'].unit_settings.system = 'METRIC'
 bpy.data.scenes['Scene'].unit_settings.scale_length = 1
-bpy.data.worlds["World"].use_sky_blend
+bpy.data.worlds["World"].use_sky_blend = True
 bpy.data.worlds["World"].zenith_color[0] = 0
 bpy.data.worlds["World"].zenith_color[1] = 0
 bpy.data.worlds["World"].zenith_color[2] = 0
