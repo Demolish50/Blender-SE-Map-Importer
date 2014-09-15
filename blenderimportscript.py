@@ -43,7 +43,7 @@ def creategrid():
        ob = bpy.data.objects.new("Grid", me)
        sce.objects.link(ob)
        sce.update()
-       gridmat = makeMaterial('gridmat', (1,0,0), (1,1,1), 1)
+       gridmat = makeMaterial('gridmat', (0,0,0), (1,1,1), 1)
        bpy.data.objects["Grid"].active_material = bpy.data.materials["gridmat"]
        bpy.data.materials["gridmat"].type = 'WIRE'
 
@@ -100,7 +100,10 @@ def readworld():
                 posz = pos.get('z')
                 posz = float(posz)
                 #Do the damn thing
-                createAsteroid(posx,posy,posz,roidname)
+                if 'medium' in roidname:
+                    createMediumAsteroid(posx,posy,posz,roidname)
+                else:
+                    createAsteroid(posx,posy,posz,roidname)
                 #print(posz)
                   
             print(roidname)
@@ -118,7 +121,20 @@ def createAsteroid(x,y,z,roidname):
        bpy.data.objects[roidname].scale[0] = 200
        bpy.data.objects[roidname].scale[1] = 200
        bpy.data.objects[roidname].scale[2] = 200
+       #bpy.data.objects[roidname].show_name = True
        bpy.data.materials["asteroidmat"].type = 'SURFACE'
+       
+#Create Medium Asteroids
+def createMediumAsteroid(x,y,z,roidname):
+       bpy.ops.mesh.primitive_ico_sphere_add(location=(x, y, z))
+       bpy.data.objects["Icosphere"].name = roidname
+       asteroidmat2 = makeMaterial('asteroidmat2', (1,1,1), (1,1,1), 1)
+       bpy.data.objects[roidname].active_material = bpy.data.materials["asteroidmat2"]
+       bpy.data.objects[roidname].scale[0] = 50
+       bpy.data.objects[roidname].scale[1] = 50
+       bpy.data.objects[roidname].scale[2] = 50
+       #bpy.data.objects[roidname].show_name = True
+       bpy.data.materials["asteroidmat2"].type = 'SURFACE'
        
 
     
