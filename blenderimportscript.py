@@ -32,7 +32,7 @@ def makeMaterial(name, diffuse, specular, alpha):
     mat.use_shadeless = True
     return mat
 
-#Make our Grid and xyz lines  - need to combine createxyz into one function
+#Make our Grid and xyz lines
 def creategrid():
        sce = bpy.context.scene
        me = bpy.data.meshes.new("Grid")
@@ -47,6 +47,7 @@ def creategrid():
        bpy.data.objects["Grid"].active_material = bpy.data.materials["gridmat"]
        bpy.data.materials["gridmat"].type = 'WIRE'
        
+#Create Planes       
 def createplanes(matName,r,g,b,rotation):
     bpy.ops.curve.primitive_nurbs_path_add(radius=1, view_align=False, enter_editmode=False, location=(0, 0, -0),               layers=(True, False, False, False, False, False, False, False, False, False, False, False, False, False, False,         False, False, False, False, False))
     bpy.context.object.scale[0] = 20000
@@ -69,8 +70,8 @@ def readworld():
     
     results = xmlRoot.findall(".//SectorObjects/MyObjectBuilder_EntityBase[Filename]")
     try:
-        for result in results:
-            roidname = result.find('Filename').text
+        for result in results: #if MyObjectBuilder..Has a filename in its tags this will have a result and if it has file should be a roid.
+            roidname = result.find('Filename').text 
             
             for pos in result.iter('Position'):
                 pos = pos.attrib
