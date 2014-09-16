@@ -46,35 +46,16 @@ def creategrid():
        gridmat = makeMaterial('gridmat', (0,0,0), (1,1,1), 1)
        bpy.data.objects["Grid"].active_material = bpy.data.materials["gridmat"]
        bpy.data.materials["gridmat"].type = 'WIRE'
-
-def createx():
+       
+def createplanes(matName,r,g,b,rotation):
     bpy.ops.curve.primitive_nurbs_path_add(radius=1, view_align=False, enter_editmode=False, location=(0, 0, -0),               layers=(True, False, False, False, False, False, False, False, False, False, False, False, False, False, False,         False, False, False, False, False))
     bpy.context.object.scale[0] = 20000
     bpy.context.object.scale[1] = 40
     bpy.context.object.scale[2] = 40
-    xmat = makeMaterial('xmat', (1,0,0), (1,1,1), 1)
-    bpy.context.object.active_material = bpy.data.materials["xmat"]
+    xmat = makeMaterial(matName, (r,g,b), (1,1,1), 1)
+    bpy.context.object.active_material = bpy.data.materials[matName]
     bpy.context.object.data.extrude = 5
-    
-def createy():
-    bpy.ops.curve.primitive_nurbs_path_add(radius=1, view_align=False, enter_editmode=False, location=(0, 0, -0),               layers=(True, False, False, False, False, False, False, False, False, False, False, False, False, False, False,         False, False, False, False, False))
-    bpy.context.object.scale[0] = 20000
-    bpy.context.object.scale[1] = 40
-    bpy.context.object.scale[2] = 40
-    ymat1 = makeMaterial('ymat1', (0,1,0), (1,1,1), 1)
-    bpy.context.object.active_material = bpy.data.materials["ymat1"]
-    bpy.context.object.data.extrude = 5
-    bpy.context.object.rotation_euler[2] = 1.5708
-
-def createz():
-    bpy.ops.curve.primitive_nurbs_path_add(radius=1, view_align=False, enter_editmode=False, location=(0, 0, -0),               layers=(True, False, False, False, False, False, False, False, False, False, False, False, False, False, False,         False, False, False, False, False))
-    bpy.context.object.scale[0] = 20000
-    bpy.context.object.scale[1] = 40
-    bpy.context.object.scale[2] = 40
-    zmat2 = makeMaterial('zmat2', (0,0,1), (1,1,1), 1)
-    bpy.context.object.active_material = bpy.data.materials["zmat2"]
-    bpy.context.object.data.extrude = 5
-    bpy.context.object.rotation_euler[1] = 1.5708
+    bpy.context.object.rotation_euler[rotation] = 1.5708
 
 #Read World File
 def readworld():
@@ -141,8 +122,8 @@ def createMediumAsteroid(x,y,z,roidname):
 
 #Program
 #createAsteroid(1000,1000,1000,'asteroid2')
+createplanes('xmat',1,0,0,0)
+createplanes('ymat',0,1,0,1)
+createplanes('zmat',0,0,1,2)
 creategrid()
-createx()
-createy()
-createz()
 readworld()
