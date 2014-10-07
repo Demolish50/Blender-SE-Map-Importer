@@ -4,7 +4,7 @@ import bmesh
 #Setup our Scene #need to figure out how to set max clip at 200km
 bpy.data.scenes['Scene'].unit_settings.system = 'METRIC'
 bpy.data.scenes['Scene'].unit_settings.scale_length = 1
-bpy.data.worlds["World"].use_sky_blend = True
+bpy.data.worlds["World"].use_sky_blend
 bpy.data.worlds["World"].zenith_color[0] = 0
 bpy.data.worlds["World"].zenith_color[1] = 0
 bpy.data.worlds["World"].zenith_color[2] = 0
@@ -32,7 +32,7 @@ def makeMaterial(name, diffuse, specular, alpha):
     mat.use_shadeless = True
     return mat
 
-#Make our Grid and xyz lines
+#Make our Grid and xyz lines  - need to combine createxyz into one function
 def creategrid():
        sce = bpy.context.scene
        me = bpy.data.meshes.new("Grid")
@@ -43,20 +43,38 @@ def creategrid():
        ob = bpy.data.objects.new("Grid", me)
        sce.objects.link(ob)
        sce.update()
-       gridmat = makeMaterial('gridmat', (0,0,0), (1,1,1), 1)
+       gridmat = makeMaterial('gridmat', (1,0,0), (1,1,1), 1)
        bpy.data.objects["Grid"].active_material = bpy.data.materials["gridmat"]
        bpy.data.materials["gridmat"].type = 'WIRE'
-       
-#Create Planes       
-def createplanes(matName,r,g,b,rotation):
+
+def createx():
     bpy.ops.curve.primitive_nurbs_path_add(radius=1, view_align=False, enter_editmode=False, location=(0, 0, -0),               layers=(True, False, False, False, False, False, False, False, False, False, False, False, False, False, False,         False, False, False, False, False))
     bpy.context.object.scale[0] = 20000
     bpy.context.object.scale[1] = 40
     bpy.context.object.scale[2] = 40
-    xmat = makeMaterial(matName, (r,g,b), (1,1,1), 1)
-    bpy.context.object.active_material = bpy.data.materials[matName]
+    xmat = makeMaterial('xmat', (1,0,0), (1,1,1), 1)
+    bpy.context.object.active_material = bpy.data.materials["xmat"]
     bpy.context.object.data.extrude = 5
-    bpy.context.object.rotation_euler[rotation] = 1.5708
+    
+def createy():
+    bpy.ops.curve.primitive_nurbs_path_add(radius=1, view_align=False, enter_editmode=False, location=(0, 0, -0),               layers=(True, False, False, False, False, False, False, False, False, False, False, False, False, False, False,         False, False, False, False, False))
+    bpy.context.object.scale[0] = 20000
+    bpy.context.object.scale[1] = 40
+    bpy.context.object.scale[2] = 40
+    ymat1 = makeMaterial('ymat1', (0,1,0), (1,1,1), 1)
+    bpy.context.object.active_material = bpy.data.materials["ymat1"]
+    bpy.context.object.data.extrude = 5
+    bpy.context.object.rotation_euler[2] = 1.5708
+
+def createz():
+    bpy.ops.curve.primitive_nurbs_path_add(radius=1, view_align=False, enter_editmode=False, location=(0, 0, -0),               layers=(True, False, False, False, False, False, False, False, False, False, False, False, False, False, False,         False, False, False, False, False))
+    bpy.context.object.scale[0] = 20000
+    bpy.context.object.scale[1] = 40
+    bpy.context.object.scale[2] = 40
+    zmat2 = makeMaterial('zmat2', (0,0,1), (1,1,1), 1)
+    bpy.context.object.active_material = bpy.data.materials["zmat2"]
+    bpy.context.object.data.extrude = 5
+    bpy.context.object.rotation_euler[1] = 1.5708
 
 #Read World File
 def readworld():
@@ -68,10 +86,10 @@ def readworld():
     xmlPath = 'e:\\test.xml'
     xmlRoot = ElementTree.parse(xmlPath).getroot()
     
-    results = xmlRoot.findall(".//SectorObjects/MyObjectBuilder_EntityBase[Filename]")
+    results = xmlRoot.findall(".//SectorObjects/MyObjectBuilder_EntityBase[StorageName]")
     try:
-        for result in results: #if MyObjectBuilder..Has a filename in its tags this will have a result and if it has file should be a roid.
-            roidname = result.find('Filename').text 
+        for result in results:
+            roidname = result.find('StorageName').text
             
             for pos in result.iter('Position'):
                 pos = pos.attrib
@@ -82,10 +100,7 @@ def readworld():
                 posz = pos.get('z')
                 posz = float(posz)
                 #Do the damn thing
-                if 'medium' in roidname:
-                    createMediumAsteroid(posx,posy,posz,roidname)
-                else:
-                    createAsteroid(posx,posy,posz,roidname)
+                createAsteroid(posx,posy,posz,roidname)
                 #print(posz)
                   
             print(roidname)
@@ -106,25 +121,13 @@ def createAsteroid(x,y,z,roidname):
        #bpy.data.objects[roidname].show_name = True
        bpy.data.materials["asteroidmat"].type = 'SURFACE'
        
-#Create Medium Asteroids
-def createMediumAsteroid(x,y,z,roidname):
-       bpy.ops.mesh.primitive_ico_sphere_add(location=(x, y, z))
-       bpy.data.objects["Icosphere"].name = roidname
-       asteroidmat2 = makeMaterial('asteroidmat2', (1,1,1), (1,1,1), 1)
-       bpy.data.objects[roidname].active_material = bpy.data.materials["asteroidmat2"]
-       bpy.data.objects[roidname].scale[0] = 50
-       bpy.data.objects[roidname].scale[1] = 50
-       bpy.data.objects[roidname].scale[2] = 50
-       #bpy.data.objects[roidname].show_name = True
-       bpy.data.materials["asteroidmat2"].type = 'SURFACE'
-       
 
     
 
 #Program
 #createAsteroid(1000,1000,1000,'asteroid2')
-createplanes('xmat',1,0,0,0)
-createplanes('ymat',0,1,0,1)
-createplanes('zmat',0,0,1,2)
 creategrid()
+createx()
+createy()
+createz()
 readworld()
